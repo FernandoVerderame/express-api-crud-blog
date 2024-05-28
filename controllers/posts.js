@@ -133,10 +133,74 @@ const file = (sendMethod) => {
     }
 }
 
+// Update dei posts
+const updatePosts = (newPosts) => {
+    const filePath = path.join(__dirname, '../db/posts.json');
+    fs.writeFileSync(filePath, JSON.stringify(newPosts));
+    posts = newPosts;
+}
+
+// Cancellazione di un file
+const deletePublicFile = (fileName) => {
+    const filePath = path.join(__dirname, '../public', fileName);
+    fs.unlinkSync(filePath);
+}
+
+// Creazione dello slug
+const createSlug = (title) => {
+    const baseSlug = title.replaceAll(' ', '-').toLowerCase().replaceAll('/', '').replaceAll('\'', '-');
+    const slugs = posts.map(p => p.slug);
+    let counter = 1;
+    let slug = baseSlug;
+    while (slugs.includes(slug)) {
+        slug = `${baseSlug}-${counter}`;
+        counter++;
+    }
+    return slug;
+}
+
+// Store dei post
+const store = (req, res) => {
+
+    const { title, content, tags } = req.body;
+    if (!title || title.replaceAll('/', '').trim().length === 0 || !content || !tags) {
+        req.file?.filename && deletePublicFile(req.file.filename);
+        return res.status(400).send('Some data is missing.');
+    } else if (!req.file || !req.file.mimetype.includes('image')) {
+        req.file?.filename && deletePublicFile(req.file.filename);
+        return res.status(400).send('Image is missing or it is not an image file.');
+    }
+
+    const slug = createSlug(title);
+
+    const newPost = {
+        title,
+        content,
+        tags,
+        image: req.file.filename,
+        slug
+    }
+
+    updatePosts([...posts, newPost]);
+
+    res.format({
+        html: () => {
+            // Logica HTML
+            res.redirect(`http://${req.headers.host}/posts/${newPost.slug}`);
+        },
+        json: () => {
+            res.json({
+                data: newPost
+            });
+        }
+    });
+}
+
 // Esporto i moduli
 module.exports = {
     index,
     show,
     create,
-    file
+    file,
+    store
 }
