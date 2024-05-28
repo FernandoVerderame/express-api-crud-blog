@@ -13,6 +13,9 @@ const port = process.env.PORT || 3000;
 // Router dei posts
 const postsRouter = require("./routers/posts.js");
 
+// Middleware globale degli errori
+const globalErrors = require("./middlewares/globalErrors.js");
+
 // Definisco la cartella public
 app.use(express.static('public'));
 
@@ -24,6 +27,9 @@ app.get('/', (req, res) => {
     const filePath = path.join(__dirname, './welcome.html');
     res.sendFile(filePath);
 });
+
+// Attivo il middleware degli errori
+app.use(globalErrors);
 
 // Avvio il server
 app.listen(port, () => {
