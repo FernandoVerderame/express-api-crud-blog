@@ -17,7 +17,7 @@ const uploader = multer({ dest: "public" });
 router.get("/", postsControllers.index);
 
 // Rotta store
-router.post("/", uploader.single("image", postsControllers.store));
+router.post("/", uploader.single("image"), postsControllers.store);
 
 // Creazione di un Post
 router.get("/create", postsControllers.create);
