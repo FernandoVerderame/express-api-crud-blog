@@ -7,8 +7,17 @@ const router = express.Router();
 // Controller dei posts
 const postsControllers = require("../controllers/posts.js");
 
+// Importo multer 
+const multer = require("multer");
+
+// Istanza di multer
+const uploader = multer({ dest: "public" });
+
 // Index dei Posts
 router.get("/", postsControllers.index);
+
+// Rotta store
+router.post("/", uploader.single("image", postsControllers.store));
 
 // Creazione di un Post
 router.get("/create", postsControllers.create);
