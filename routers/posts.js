@@ -25,6 +25,9 @@ router.get("/create", postsControllers.create);
 // Show dei posts
 router.get("/:slug", postsControllers.show);
 
+// Cancellazione di un Post
+router.delete("/:slug", postsControllers.destroy);
+
 // Rotta per il download delle immagini
 router.get("/:slug/download", postsControllers.file('download'));
 
