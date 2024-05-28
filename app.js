@@ -16,14 +16,14 @@ const postsRouter = require("./routers/posts.js");
 // Definisco la cartella public
 app.use(express.static('public'));
 
+// Indico ad express che esistono nuove rotte
+app.use('/posts', postsRouter);
+
 // Rotta base
 app.get('/', (req, res) => {
     const filePath = path.join(__dirname, './welcome.html');
     res.sendFile(filePath);
 });
-
-// Indico ad express che esistono nuove rotte
-app.use('/posts', postsRouter);
 
 // Avvio il server
 app.listen(port, () => {

@@ -159,7 +159,7 @@ const createSlug = (title) => {
     return slug;
 }
 
-// Store dei post
+// Store dei posts
 const store = (req, res) => {
 
     const { title, content, tags } = req.body;
@@ -196,11 +196,24 @@ const store = (req, res) => {
     });
 }
 
+// Destroy dei Posts
+const destroy = (req, res) => {
+
+    const { slug } = req.params;
+    const deletePost = posts.find(p => p.slug === slug);
+
+    deletePublicFile(deletePost.image);
+    updatePosts(posts.filter(p => p.slug !== deletePost.slug));
+
+    res.send(`Post con slug ${slug} eliminato con successo.`);
+}
+
 // Esporto i moduli
 module.exports = {
     index,
     show,
     create,
     file,
-    store
+    store,
+    destroy
 }
