@@ -7,6 +7,9 @@ const router = express.Router();
 // Controller dei posts
 const postsControllers = require("../controllers/posts.js");
 
+// Middleware della delete
+const deleteErrors = require("../middlewares/deleteErrors.js");
+
 // Importo multer 
 const multer = require("multer");
 
@@ -26,7 +29,7 @@ router.get("/create", postsControllers.create);
 router.get("/:slug", postsControllers.show);
 
 // Cancellazione di un Post
-router.delete("/:slug", postsControllers.destroy);
+router.delete("/:slug", deleteErrors, postsControllers.destroy);
 
 // Rotta per il download delle immagini
 router.get("/:slug/download", postsControllers.file('download'));
